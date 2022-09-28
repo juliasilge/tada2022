@@ -558,18 +558,19 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(stm)</span>
 <span id="cb5-2"><a href="#cb5-2"></a>bunny_topic_model <span class="ot">&lt;-</span> <span class="fu">stm</span>(sparse_bunnies, <span class="at">K =</span> <span class="dv">2</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">summary</span>(bunny_topic_model)</span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt; A topic model with 2 topics, 300 documents and a 2767 word dictionary.</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; Topic 1 Top Words:</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt;       Highest Prob: #rabbits, #rabbit, #bunny, the, of, a, rabbit </span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt;       FREX: #catsoftwitter, happy, #bunnyboy, #design, #dogsoftwitter, 🐶, #handmade </span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt;       Lift: own, @rabbitloversusa, #rabbit, #catsoftwitter, #dogsoftwitter, 🐶, auction </span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt;       Score: #catsoftwitter, #handmade, #wallart, #decorations, #designinspiration, #designresources, #designthinking </span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; Topic 2 Top Words:</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt;       Highest Prob: the, #rabbits, and, to, a, you, is </span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt;       FREX: 🆘, shipping, care, just, #burrowspot, will, 🔥 </span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;       Lift: #burrowspot, nothing, 💩, bedtime, comical, find, fine </span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt;       Score: 🆘, shipping, 5, ⬆️, ⬇️, #giftideas, ✈</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="fu">summary</span>(bunny_topic_model)</span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; A topic model with 2 topics, 300 documents and a 2767 word dictionary.</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; Topic 1 Top Words:</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt;       Highest Prob: #rabbits, #rabbit, #bunny, the, of, a, rabbit </span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt;       FREX: #catsoftwitter, happy, #bunnyboy, #design, #dogsoftwitter, 🐶, #handmade </span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt;       Lift: own, @rabbitloversusa, #rabbit, #catsoftwitter, #dogsoftwitter, 🐶, auction </span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt;       Score: #catsoftwitter, #handmade, #wallart, #decorations, #designinspiration, #designresources, #designthinking </span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; Topic 2 Top Words:</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt;       Highest Prob: the, #rabbits, and, to, a, you, is </span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;       FREX: 🆘, shipping, care, just, #burrowspot, will, 🔥 </span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt;       Lift: #burrowspot, nothing, 💩, bedtime, comical, find, fine </span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt;       Score: 🆘, shipping, 5, ⬆️, ⬇️, #giftideas, ✈</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="collaboration" class="slide level2" data-background-image="figs/mathias-elle-ygqaLPkaB2o-unsplash.jpg" data-background-opacity="0.5">
