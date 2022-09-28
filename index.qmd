@@ -1,0 +1,460 @@
+---
+title: "Good Enough Practices for Text Analysis"
+subtitle: "Text as Data (TADA 🪄)"
+author: "Julia Silge"
+date: "6 October 2022"
+format:
+  revealjs: 
+    footer: <https://juliasilge.github.io/tada2022/>
+    theme: [dark, custom.scss]
+    width: 1280
+    height: 720
+    title-slide-attributes: 
+      data-background-image: figs/steve-smith-cwJGHJsdCp4-unsplash.jpg
+      data-background-opacity: "0.3"
+knitr:
+  opts_chunk: 
+    echo: true
+    collapse: true
+    comment: "#>"    
+---
+
+```{r}
+#| echo: false
+#| eval: false
+library(tidyverse)
+library(rtweet)
+
+bunny_tweets <- search_tweets("#rabbits", n = 1000, include_rts = FALSE)
+
+bunny_tweets %>%
+    filter(!possibly_sensitive, lang == "en") %>%
+    select(created_at, id, full_text) %>%
+    slice_sample(n = 300) %>%
+    write_csv("data/bunny-tweets.csv")
+```
+
+
+```{r}
+#| echo: false
+library(tidyverse)
+bunny_tweets <- read_csv("data/bunny-tweets.csv")
+```
+
+
+# Hello!
+
+
+<center>
+<img style="border-radius: 50%;" src="https://github.com/juliasilge.png" width="250px"/>
+
+[{{< fa brands github >}} \@juliasilge](https://github.com/juliasilge)
+
+[{{< fa brands twitter >}} \@juliasilge](https://twitter.com/juliasilge)
+
+[{{< fa brands youtube >}} youtube.com/juliasilge](https://www.youtube.com/juliasilge)
+
+[{{< fa link >}} juliasilge.com](https://juliasilge.com/)
+
+</center>
+
+## {background-color="white"}
+
+::: {.fragment}
+![](figs/tmwr-cover.png){.absolute bottom=0 left=100 width="500"}
+:::
+
+::: {.fragment}
+![](figs/smltar-cover.jpg){.absolute top=0 right=100 width="400"}
+:::
+
+::: {.fragment}
+![](figs/tidytext-cover.png){.absolute bottom=20 left=400 width="500"}
+:::
+
+::: footer
+:::
+
+
+# Good enough practices in scientific computing
+
+. . .
+
+Greg Wilson, Jennifer Bryan, Karen Cranston, Justin Kitzes, Lex Nederbragt, Tracy K. Teal
+
+<https://doi.org/10.1371/journal.pcbi.1005510>
+
+# Good enough practices for text analysis {background-image="figs/pablo-martinez-eXLCx0XBaUE-unsplash.jpg" background-opacity=0.5}
+
+
+## Data management {background-image="figs/sgalagaev--5iSCtrJX5o-unsplash.jpg" background-opacity=0.5}
+
+## Data management for bunnies {auto-animate="true"}
+
+```{r}
+bunny_tweets
+```
+
+. . .
+
+Save the raw data!
+
+## Data management for bunnies {auto-animate="true"}
+
+```{r}
+library(tidytext)
+
+bunny_tweets %>%
+    unnest_tokens(word, full_text, token = "tweets")
+```
+
+. . .
+
+Create analysis-friendly data
+
+
+## Data management for bunnies 
+
+```{r}
+library(tidytext)
+
+tidy_bunnies <-
+    bunny_tweets %>%
+    unnest_tokens(word, full_text, token = "tweets")
+
+tidy_bunnies
+```
+
+Record _all_ steps used to process your data
+
+
+
+## Software {background-image="figs/saad-walid-rq54R9mdmhs-unsplash.jpg" background-opacity=0.5}
+
+## Good enough software engineering
+
+::: incremental
+- Readable
+
+- Reusable
+
+- Testable
+
+- Modular
+:::
+
+
+. . .
+
+Learn more about software development from resources like [_The Pragmatic Programmer_](https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/)
+
+## Use appropriate data structures
+
+```{r}
+sparse_bunnies <-
+    tidy_bunnies %>%
+    count(id, word) %>%
+    cast_sparse(id, word, n)
+
+dim(sparse_bunnies)
+```
+
+## Use well-maintained software
+
+```{r}
+library(stm)
+bunny_topic_model <- stm(sparse_bunnies, K = 2, verbose = FALSE)
+
+summary(bunny_topic_model)
+```
+
+
+## Collaboration {background-image="figs/mathias-elle-ygqaLPkaB2o-unsplash.jpg" background-opacity=0.5}
+
+## Make collaboration easier
+
+::: incremental
+- Create `README` and `CONTRIBUTING` files
+
+- Document what needs to be done and planned next steps
+
+- Be clear about communication strategies
+
+- Choose a license
+:::
+
+. . .
+
+Almost _every_ choice you make in your text analysis project supports or detracts from healthy collaboration
+
+## Project organization {background-image="figs/kenny-eliason-MzKTG9cQ2zo-unsplash.jpg" background-opacity=0.5}
+
+## Organize your text analysis project
+
+[Project Structure](https://slides.djnavarro.net/) by Danielle Navarro
+
+. . .
+
+### Names matter!
+
+. . .
+
+- Machine readable
+- Human readable
+- Consider order, sorting, and searching
+
+## Organize your text analysis project {auto-animate="true"}
+
+[Project Structure](https://slides.djnavarro.net/) by Danielle Navarro
+
+### Names matter!
+
+- `traintopicmodel.R`
+- `Untitled43.ipynb`
+- `mytweets.csv`
+
+## Organize your text analysis project {auto-animate="true"}
+
+[Project Structure](https://slides.djnavarro.net/) by Danielle Navarro
+
+### Names matter!
+
+- `Bunny Tweet Data.csv`
+- `traintopicmodel (1).R`
+- `traintopicmodel.R`
+- `Untitled43.ipynb`
+- `mytweets.csv`
+
+## Organize your text analysis project {auto-animate="true"}
+
+[Project Structure](https://slides.djnavarro.net/) by Danielle Navarro
+
+### Names matter!
+
+- `bunny-tweets.csv`
+- `01-train-topic-model.R`
+- `02-train-topic-model.R`
+- `03-evaluate-model.ipynb`
+- `2022-10-06-tweets.csv`
+
+# Each [project]{.yellow} should be a [folder]{.yellow}
+
+## Organize your text analysis project {background-image="figs/kenny-eliason-MzKTG9cQ2zo-unsplash.jpg" background-opacity=0.3}
+
+[Project Structure](https://slides.djnavarro.net/) by Danielle Navarro
+
+. . .
+
+::: columns
+
+::: {.column width="50%"}
+```{verbatim}
+#| class-source: taller_code
+#| classes: taller_code
+.
+├── README.md
+├── bunny-topic-model.rds
+├── bunny-tweets.txt
+├── evaluate-model.R
+├── parse-breeds.R
+├── parse-test.R
+├── rabbit-breeds.json
+├── rabbits-on-social-media.qmd
+├── rabbits-on-social-media.pdf
+├── train-model.R
+└── work.R
+```
+:::
+
+::: {.column width="50%"}
+```{verbatim}
+#| class-source: taller_code
+#| classes: taller_code
+.
+├── README.md
+├── 01-data
+│   │   ├── raw-data
+│   │   │   ├── bunny-tweets.txt
+│   │   │   └── rabbit-breeds.json
+│   │   ├── intermediate-data
+│   │   │   ├── bunny-topic-model.rds
+│   │   │   └── breeds-parsed.csv
+├── 02-analysis
+│   ├── 01-parse-breeds.R
+│   ├── 02-tokenize-eda.R
+│   ├── 03-train-model.R
+│   └── 04-evaluate-model.R
+└── 03-paper
+    ├── rabbits-on-social-media.qmd
+    └── rabbits-on-social-media.pdf
+```
+:::
+
+
+:::
+
+
+## Keeping track of changes {background-image="figs/theresa-brand-hWuVJCcrjhs-unsplash.jpg" background-opacity=0.5}
+
+##  {background-image="figs/theresa-brand-hWuVJCcrjhs-unsplash.jpg" background-opacity=0.3}
+
+![](https://imgs.xkcd.com/comics/git.png){fig-align="center"}
+
+::: footer
+<https://xkcd.com/1597/>
+:::
+
+## `final_final2_really_final`
+
+[Happy Git and GitHub for the useR](https://happygitwithr.com/) by Jenny Bryan
+
+::: incremental
+- Version control systems have a steep learning curve
+
+- VCS automate steps to correctly track changes
+
+- VCS also _enforce_ these steps
+:::
+
+. . .
+
+Adoption of VCS supports [reproducibility]{.yellow} and healthy [collaboration]{.yellow}
+
+## What not to version? {background-image="figs/theresa-brand-hWuVJCcrjhs-unsplash.jpg" background-opacity=0.3}
+
+::: incremental
+- Data that is "large" (10s of MB)
+
+- Sensitive or private data
+
+- Passwords, API keys, etc
+:::
+
+. . .
+
+What about the raw data, intermediate data files, binary files?
+
+## Manuscripts  {background-image="figs/enq-1998-pxu2yxCTbTU-unsplash.jpg" background-opacity=0.5}
+
+# Treat your [manuscript]{.yellow} like [software]{.yellow}
+
+## Manuscript as software
+
+[The Plain Person’s Guide to Plain Text Social Science](https://kieranhealy.org/publications/plain-person-text/) by Kieran Healy
+
+::: incremental
+- Write prose like you write code
+
+- Embrace plain text formats
+
+- Use version control
+:::
+
+## Manuscript as software
+
+````
+## Term frequency in Jane Austen's novels
+
+Let's start by looking at the published novels of Jane Austen and examine first term frequency, then tf-idf. We can start just by using dplyr verbs such as `group_by()` and `join()`. What are the most commonly used words in Jane Austen's novels? (Let's also calculate the total words in each novel here, for later use.)
+
+```{{r}}
+library(dplyr)
+library(janeaustenr)
+library(tidytext)
+
+book_words <- austen_books() %>%
+  unnest_tokens(word, text) %>%
+  count(book, word, sort = TRUE)
+
+total_words <- book_words %>% 
+  group_by(book) %>% 
+  summarize(total = sum(n))
+
+book_words <- left_join(book_words, total_words)
+
+book_words
+```
+
+There is one row in this `book_words` data frame for each word-book combination; `n` is the number of times that word is used in that book and `total` is the total words in that book. The usual suspects are here with the highest `n`, "the", "and", "to", and so forth. In Figure \@ref(fig:plottf), let's look at the distribution of `n/total` for each novel, the number of times a word appears in a novel divided by the total number of terms (words) in that novel. This is exactly what term frequency is.
+
+```{{r}}
+library(ggplot2)
+
+ggplot(book_words, aes(n/total, fill = book)) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) +
+  facet_wrap(~book, ncol = 2, scales = "free_y")
+```
+
+There are very long tails to the right for these novels (those extremely rare words!) that we have not shown in these plots. These plots exhibit similar distributions for all the novels, with many words that occur rarely and fewer words that occur frequently.
+
+## Zipf's law
+
+Distributions like those shown in Figure \@ref(fig:plottf) are typical in language. In fact, those types of long-tailed distributions are so common in any given corpus of natural language (like a book, or a lot of text from a website, or spoken words) that the relationship between the frequency that a word is used and its rank has been the subject of study; a classic version of this relationship is called Zipf's law, after George Zipf, a 20th century American linguist. 
+
+Zipf's law states that the frequency that a word appears is inversely proportional to its rank. 
+
+Since we have the data frame we used to plot term frequency, we can examine Zipf's law for Jane Austen's novels with just a few lines of dplyr functions.
+
+```{{r}}
+freq_by_rank <- book_words %>% 
+  group_by(book) %>% 
+  mutate(rank = row_number(), 
+         `term frequency` = n/total) %>%
+  ungroup()
+
+freq_by_rank
+```
+````
+
+
+##  {background-iframe="https://quarto.org/"}
+
+::: footer
+:::
+
+
+## Learn more
+
+::: incremental
+-   Read the original paper [by Wilson et al](https://doi.org/10.1371/journal.pcbi.1005510)
+
+-   Check out my books!
+
+    - [Text Mining with R](https://www.tidytextmining.com/)
+
+    - [Supervised Machine Learning for Text Analysis in R](https://smltar.com/)
+    
+    - [Tidy Modeling with R](https://www.tmwr.org/) 
+:::
+
+# Thanks!
+
+
+<center>
+<img style="border-radius: 50%;" src="https://github.com/juliasilge.png" width="250px"/>
+
+[{{< fa brands github >}} \@juliasilge](https://github.com/juliasilge)
+
+[{{< fa brands twitter >}} \@juliasilge](https://twitter.com/juliasilge)
+
+[{{< fa brands youtube >}} youtube.com/juliasilge](https://www.youtube.com/juliasilge)
+
+[{{< fa link >}} juliasilge.com](https://juliasilge.com/)
+
+</center>
+
+# Thanks! {.smaller background-image="figs/mathias-elle-ygqaLPkaB2o-unsplash.jpg" background-opacity=0.3}
+
+Rabbit pictures by:
+
+- [Steve Smith](https://unsplash.com/photos/cwJGHJsdCp4)
+- [Степан Галагаев](https://unsplash.com/photos/-5iSCtrJX5o)
+- [Enq 1998](https://unsplash.com/photos/pxu2yxCTbTU)
+- [Kenny Eliason](https://unsplash.com/photos/MzKTG9cQ2zo)
+- [Saad Walid](https://unsplash.com/photos/rq54R9mdmhs)
+- [Theresa Brand ](https://unsplash.com/photos/hWuVJCcrjhs)
+- [Mathias Elle](https://unsplash.com/photos/ygqaLPkaB2o)
+- [Pablo Martinez](https://unsplash.com/photos/eXLCx0XBaUEM)
+
+
